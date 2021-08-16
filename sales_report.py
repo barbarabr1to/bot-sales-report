@@ -26,3 +26,12 @@ def access_link():
     auto.hotkey('CTRL', 'v')
     return auto.hotkey('ENTER')
 
+def enter_folder():
+    time.sleep(2)
+    return auto.doubleClick(x=520, y=455)
+
+# MELHORIA: certificar se o arquivo baixou
+def download_file():
+    time.sleep(2)
+    auto.click(x=550, y=540, button='right')
+    return auto.click(x=720, y=950)
