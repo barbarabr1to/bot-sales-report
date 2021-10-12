@@ -1,47 +1,78 @@
+from   datetime  import date
 import pyautogui as auto
 import pandas    as pd
 import pyperclip
 import time 
-
-
-# Passo 1: Abrir navegador
-# Passo 2: Acessar link - https://drive.google.com/drive/folders/149xknr9JvrlEnhNWO49zPcw0PW5icxga?usp=sharing
-# Passo 3: Entrar na pasta "exportar"
-# Passo 4: Baixa arquivo - Vendas - Dez
-# Passo 5: Calcular a quantiade e o faturamento dos produtos 
-# Passo 6: Enviar email para diretoria
+import os.path
 
 
 auto.PAUSE = 1
 
-# MELHORIA: deixar resiliente a qualquer SO e browser
 def open_browser():
     auto.hotkey('WIN', 'r')
-    auto.write('C:\Program Files\Google\Chrome\Application\chrome.exe', interval=0.05)
+    auto.write('C:\Program Files\Google\Chrome\Application\chrome.exe', interval=0.01)
     return auto.press('ENTER')
 
-# MELHORIA: deixar resiliente caso não tenha conta google logada
-def access_link():
+
+def access_link(link):
     time.sleep(2)
-    pyperclip.copy('https://drive.google.com/drive/folders/149xknr9JvrlEnhNWO49zPcw0PW5icxga?usp=sharing')
+    pyperclip.copy(link)
     auto.hotkey('CTRL', 'v')
     return auto.hotkey('ENTER')
+   
 
 def enter_folder():
     time.sleep(2)
-    return auto.doubleClick(x=520, y=455)
+    return auto.doubleClick(x=510, y=385)
 
-# MELHORIA: certificar se o arquivo baixou
+
 def download_file():
     time.sleep(2)
-    auto.click(x=550, y=540, button='right')
-    return auto.click(x=720, y=950)
+    auto.click(x=500, y=385, button='right')
+    return auto.click(x=670, y=900)
 
-# MELHORIA: identificar caminho de forma dinânmica
+
 def calculate():
-    spreadsheet = pd.read_excel(r'C:\Users\Bárbara\Downloads\Vendas - Dez (1).xlsx')
+    file = r'C:\Users\Bárbara\Downloads\Vendas - Dez.xlsx'
+
+    while(not os.path.exists(file)):
+        time.sleep(1)
+        print('\n::::: Aguardando download de arquivo')
+        
+    spreadsheet = pd.read_excel(file)
     quantity = spreadsheet['Quantidade'].sum()
     revenues = spreadsheet['Valor Final'].sum()
+    
     print('\nQuantidade de produtos:', quantity)
     print(f'Faturamento: R$ {revenues},00\n')
+    
     return quantity, revenues
+
+
+def access_gmail(link):
+    auto.hotkey('CTRL', 't')
+    return access_link(link)
+
+
+def write_email(email, collaborator):
+    time.sleep(2)
+    auto.click(x=130, y=260)
+    auto.write(email)
+    auto.press('TAB')
+    auto.press('TAB')
+    current_date = date.today().strftime('%d/%m/%Y')
+    pyperclip.copy(f'RELATÓRIO DE VENDAS - {current_date}')
+    auto.hotkey('CTRL', 'v')
+    auto.press('TAB')
+    info = calculate()
+    pyperclip.copy(f"""
+    Prezados, 
+    Abaixo estão as informações das vendas diária
+   
+    Quantidade de produtos vendidos: {info[0]}
+    Faturamento: R$ {'{0:,}'.format(info[1]).replace(',','.')},00
+
+    At.te, {collaborator}
+    """)
+    auto.hotkey('CTRL', 'v')
+    return auto.hotkey('CTRL', 'ENTER')
