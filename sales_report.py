@@ -8,9 +8,9 @@ import os.path
 
 auto.PAUSE = 1
 
-def open_browser():
+def open_browser(path_browser):
     auto.hotkey('WIN', 'r')
-    auto.write('C:\Program Files\Google\Chrome\Application\chrome.exe', interval=0.01)
+    auto.write(path_browser, interval=0.01)
     return auto.press('ENTER')
 
 
@@ -23,23 +23,22 @@ def access_link(link):
 
 def enter_folder():
     time.sleep(2)
-    return auto.doubleClick(x=510, y=385)
+    return auto.doubleClick(x=535, y=405)
 
 
 def download_file():
     time.sleep(2)
-    auto.click(x=500, y=385, button='right')
-    return auto.click(x=670, y=900)
+    auto.click(x=540, y=500, button='right')
+    return auto.click(x=710, y=900)
 
 
-def calculate():
-    file = r'C:\Users\Bárbara\Downloads\Vendas - Dez.xlsx'
+def calculate(path_file):
 
-    while(not os.path.exists(file)):
+    while(not os.path.exists(path_file)):
         time.sleep(1)
         print('\n::::: Aguardando download de arquivo')
         
-    spreadsheet = pd.read_excel(file)
+    spreadsheet = pd.read_excel(path_file)
     quantity = spreadsheet['Quantidade'].sum()
     revenues = spreadsheet['Valor Final'].sum()
     
@@ -54,9 +53,9 @@ def access_gmail(link):
     return access_link(link)
 
 
-def write_email(email, collaborator):
+def write_email(email, collaborator, info):
     time.sleep(2)
-    auto.click(x=130, y=260)
+    auto.click(x=55, y=260)
     auto.write(email)
     auto.press('TAB')
     auto.press('TAB')
@@ -64,7 +63,6 @@ def write_email(email, collaborator):
     pyperclip.copy(f'RELATÓRIO DE VENDAS - {current_date}')
     auto.hotkey('CTRL', 'v')
     auto.press('TAB')
-    info = calculate()
     pyperclip.copy(f"""
     Prezados, 
     Abaixo estão as informações das vendas diária
