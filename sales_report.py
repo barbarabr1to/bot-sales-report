@@ -74,3 +74,5 @@ def write_email(email, collaborator, info):
     """)
     auto.hotkey('CTRL', 'v')
     return auto.hotkey('CTRL', 'ENTER')
+
+print("Relário de vendas")
