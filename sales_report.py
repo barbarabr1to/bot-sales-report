@@ -75,4 +75,5 @@ def write_email(email, collaborator, info):
     auto.hotkey('CTRL', 'v')
     return auto.hotkey('CTRL', 'ENTER')
 
+# Testando comandos git
 print("Relário de vendas")
