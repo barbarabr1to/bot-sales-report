@@ -77,3 +77,4 @@ def write_email(email, collaborator, info):
 
 # Testando comandos git
 print("Relário de vendas")
+print("Testando comandos git")
