@@ -79,3 +79,4 @@ def write_email(email, collaborator, info):
 print("Relário de vendas")
 print("Testando comandos git")
 print("git pull")
+print("git fetch")
